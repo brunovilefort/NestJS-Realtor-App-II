@@ -1,44 +1,8 @@
-import { PrismaService } from '@/prisma/prisma.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PropertyType } from '@prisma/client';
-import { HomeResponseDTO } from './dtos/home.dto';
 
-type GetHomesInput = {
-  city?: string;
-  price?: { get?: number; lte?: number };
-  propertyType?: PropertyType;
-};
-
-type CreateHomeInput = {
-  address: string;
-  numberOfBedrooms: number;
-  numberOfBathrooms: number;
-  city: string;
-  price: number;
-  landSize: number;
-  propertyType: PropertyType;
-  images: { url: string }[];
-};
-
-type UpdateHomeInput = {
-  address?: string;
-  numberOfBedrooms?: number;
-  numberOfBathrooms?: number;
-  city?: string;
-  price?: number;
-  landSize?: number;
-  propertyType?: PropertyType;
-};
-
-export const homeSelect = {
-  id: true,
-  address: true,
-  city: true,
-  price: true,
-  propertyType: true,
-  number_of_bathrooms: true,
-  number_of_bedrooms: true,
-};
+import { PrismaService } from '@/prisma/prisma.service';
+import { HomeResponseDTO } from '@/home/dtos';
+import { GetHomesInput, homeSelect, CreateHomeInput, UpdateHomeInput } from '@/home/interfaces';
 
 @Injectable()
 export class HomeService {

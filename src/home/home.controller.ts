@@ -9,9 +9,10 @@ import {
   ParseIntPipe,
   Body,
 } from '@nestjs/common';
+
+import { HomeService } from '@/home/home.service';
+import { CreateHomeDTO, HomeResponseDTO, UpdateHomeDTO } from '@/home/dtos';
 import { PropertyType } from '@prisma/client';
-import { CreateHomeDTO, HomeResponseDTO, UpdateHomeDTO } from './dtos/home.dto';
-import { HomeService } from './home.service';
 
 @Controller('home')
 export class HomeController {

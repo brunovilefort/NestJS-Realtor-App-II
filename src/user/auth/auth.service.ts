@@ -1,17 +1,10 @@
 import { ConflictException, HttpException, Injectable } from '@nestjs/common';
+import { UserType } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 
-import { UserType } from '@prisma/client';
+import { SignupInput, SigninInput } from '@/user/interfaces';
 import { PrismaService } from '@/prisma/prisma.service';
-
-type SignupInput = {
-  name: string;
-  phone: string;
-  email: string;
-  password: string;
-};
-type SigninInput = { email: string; password: string };
 
 @Injectable()
 export class AuthService {
