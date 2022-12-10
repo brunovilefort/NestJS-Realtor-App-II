@@ -39,4 +39,9 @@ export class AuthService {
   private generateJWT(id: string, name: string) {
     return jwt.sign({ name, id }, process.env.JWT_SECRET, { expiresIn: '1d' });
   }
+
+  generateProductKey(email: string, userType: UserType) {
+    const string = `${email}-${userType}-${process.env.PRODUCT_KEY_SECRET}`;
+    return bcrypt.hash(string, 12);
+  }
 }
