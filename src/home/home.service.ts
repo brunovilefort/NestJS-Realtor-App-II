@@ -9,6 +9,27 @@ type GetHomesInput = {
   propertyType?: PropertyType;
 };
 
+type CreateHomeInput = {
+  address: string;
+  numberOfBedrooms: number;
+  numberOfBathrooms: number;
+  city: string;
+  price: number;
+  landSize: number;
+  propertyType: PropertyType;
+  images: { url: string }[];
+};
+
+type UpdateHomeInput = {
+  address?: string;
+  numberOfBedrooms?: number;
+  numberOfBathrooms?: number;
+  city?: string;
+  price?: number;
+  landSize?: number;
+  propertyType?: PropertyType;
+};
+
 export const homeSelect = {
   id: true,
   address: true,
@@ -56,5 +77,41 @@ export class HomeService {
     });
     if (!home) throw new NotFoundException();
     return new HomeResponseDTO(home);
+  }
+
+  async createHome({
+    address,
+    numberOfBedrooms,
+    numberOfBathrooms,
+    city,
+    price,
+    landSize,
+    propertyType,
+    images,
+  }: CreateHomeInput) {
+    const home = await this.prismaService.home.create({
+      data: {
+        address,
+        number_of_bedrooms: numberOfBedrooms,
+        number_of_bathrooms: numberOfBathrooms,
+        city,
+        price,
+        land_size: landSize,
+        propertyType,
+        realtor_id: '4',
+      },
+    });
+    const homeImages = images.map((image) => {
+      return { ...image, home_id: home.id };
+    });
+    await this.prismaService.image.createMany({ data: homeImages });
+    return new HomeResponseDTO(home);
+  }
+
+  async updateHomeById(id: number, data: UpdateHomeInput) {
+    const home = await this.prismaService.home.findUnique({ where: { id } });
+    if (!home) throw new NotFoundException();
+    const updatedHome = await this.prismaService.home.update({ where: { id }, data });
+    return new HomeResponseDTO(updatedHome);
   }
 }
