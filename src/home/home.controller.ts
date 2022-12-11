@@ -12,10 +12,12 @@ import {
 } from '@nestjs/common';
 
 import { HomeService } from '@/home/home.service';
-import { PropertyType } from '@prisma/client';
 import { CreateHomeDTO, HomeResponseDTO, UpdateHomeDTO } from '@/home/dtos';
-import { User } from '@/user/decorators';
+import { PropertyType, UserType } from '@prisma/client';
+import { AuthGuard } from '@/guards';
 import { UserInfo } from '@/user/interfaces';
+import { User } from '@/user/decorators';
+import { Roles } from '@/decorators';
 
 @Controller('home')
 export class HomeController {
@@ -48,11 +50,13 @@ export class HomeController {
     return this.homeService.getHomeById(id);
   }
 
+  @Roles(UserType.ADMIN, UserType.REALTOR)
   @Post()
   createHome(@Body() body: CreateHomeDTO, @User() user: UserInfo) {
     return this.homeService.createHome(body, user.id);
   }
 
+  @Roles(UserType.ADMIN, UserType.REALTOR)
   @Put(':id')
   async updateHome(
     @Param('id', ParseIntPipe) id: number,
@@ -64,6 +68,7 @@ export class HomeController {
     return this.homeService.updateHomeById(id, body);
   }
 
+  @Roles(UserType.ADMIN, UserType.REALTOR)
   @Delete(':id')
   async deleteHome(@Param('id', ParseIntPipe) id: number, @User() user: UserInfo) {
     const realtor = await this.homeService.getRealtorByHomeId(id);
